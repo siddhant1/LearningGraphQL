@@ -1,30 +1,60 @@
 import { GraphQLServer } from "graphql-yoga";
 
+// const typeDefs = `
+//   type Query{
+//       hello:String!
+//       name:String!
+//       location:String!
+//       bio:String!
+//   }
+// `;
+
 const typeDefs = `
-  type Query{
-      hello:String!
-      name:String!
-      location:String!
-      bio:String!
-  }
+type Query{
+    id:ID!
+    title:String!
+    releaseYear:Int
+    rating:Float
+    inStock:Boolean!
+
+}
 `;
 
 const resolvers = {
   Query: {
-    hello() {
-      return "This is my first query";
+    id() {
+      return "abc123";
     },
-    name() {
-      return "Siddhant ";
+    title() {
+      return "Siddhant";
     },
-    location() {
-      return "New Delhi";
+    releaseYear() {
+      return null;
     },
-    bio() {
-      return "Aspiring GQL Programmer";
+    rating() {
+      return 1.1;
+    },
+    inStock() {
+      return true;
     }
   }
 };
+// const resolvers = {
+//   Query: {
+//     hello() {
+//       return "This is my first query";
+//     },
+//     name() {
+//       return "Siddhant ";
+//     },
+//     location() {
+//       return "New Delhi";
+//     },
+//     bio() {
+//       return "Aspiring GQL Programmer";
+//     }
+//   }
+// };
 const options = {
   port: 8000,
   endpoint: "/graphql",

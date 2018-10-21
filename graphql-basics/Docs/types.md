@@ -1,9 +1,9 @@
 Types in graphql
 
 
-5 scalar types i.e it stores a single value
-String
-Boolean
-Int
-Float
-ID :- String but unique
+# 5 scalar types i.e it stores a single value
+1. String
+2. Boolean
+3. Int
+4. Float
+5. ID :- String but unique

@@ -21,21 +21,37 @@ import { GraphQLServer } from "graphql-yoga";
 // }
 // `;
 
+//DEMO POSTS
+const posts = [
+  {
+    id: "123",
+    title: "GAG",
+    body: "GAG"
+  },
+  {
+    id: "123",
+    title: "Hey",
+    body: "hey"
+  }
+];
+
 // Custom Type Def
 //! *************************USer Defined Custome TypeDef QUERIES******************************
 const typeDefs = `
-
-
 type Query{
-    me:User!
+    post(query:String):[Post!]!
+    greeting(name: String):String!
+    add(a: Float!,b: Float!):Float!
+    add1(arr:[Float!]!):Float!
+    grades:[Int!]!
 }
 
-type User{
+type Post{
     id:ID!
-    name:String!
-    email:String!
-    age:Int
+    title:String
+    body:String!
 }
+
 `;
 
 //! **********************SCALAR QUERIES Resolver******************************
@@ -59,12 +75,35 @@ const resolvers = {
   //   }
 
   Query: {
-    me() {
-      return {
-        id: "abc123",
-        name: "Siddhant",
-        email: "siddhant.manchanda@gmail.com"
-      };
+    // me() {
+    //   return {
+    //     id: "abc123",
+    //     name: "Siddhant",
+    //     email: "siddhant.manchanda@gmail.com"
+    //   };
+    // },
+    post(parent, args, ctx, info) {
+      const { query = "" } = args;
+      let newposts = posts.filter(e => e.title.includes(query));
+      return newposts;
+    },
+    greeting(parent, args, ctx, info) {
+      return `Hello ${args.name || ""}`;
+    },
+    add(parent, args, ctx, info) {
+      const { a, b } = args;
+      return a + b;
+    },
+    grades(parent, args, ctx, info) {
+      return [90, 99, 70, 88];
+    },
+    add1(parent, args, ctx, info) {
+      const { arr } = args;
+      let result = 0;
+      arr.forEach(element => {
+        result += element;
+      });
+      return result;
     }
   }
 };

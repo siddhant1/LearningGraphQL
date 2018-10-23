@@ -1,4 +1,5 @@
 import { GraphQLServer } from "graphql-yoga";
+import uuidv4 from "uuid/v4";
 
 //! ************************************************SCALAR QUERIES******************************
 // const typeDefs = `
@@ -46,11 +47,13 @@ const users = [
   {
     id: "1",
     name: "Siddhant",
+    email: "sidhant.manchanda@gmail.com",
     age: 12
   },
   {
     id: "2",
     name: "Alok",
+    email: "siddhantmanchanda98@gmail.com",
     age: 11
   }
 ];
@@ -86,6 +89,12 @@ type Query{
     add1(arr:[Float!]!):Float!
     grades:[Int!]!
     comment:[Comment!]!
+}
+
+type Mutation{
+    createUser(name:String!,email:String!,age:Int):User! 
+    createPost(title:String!,body:String!,author:ID!):Post!
+    createComment(text:String!,author:ID!,post:ID!):Comment!
 }
 type User {
   id:ID!,
@@ -166,6 +175,45 @@ const resolvers = {
     },
     comment(parent, args, ctx, info) {
       return comments;
+    }
+  },
+  Mutation: {
+    createUser(parent, args, info, ctx) {
+      const emailTaken = users.some(user => user.email == args.email);
+      if (emailTaken) {
+        throw new Error("Email Taken");
+      }
+      const user = {
+        id: uuidv4(),
+        ...args
+      };
+      users.push(user);
+      return user;
+    },
+    createPost(parent, args, info, ctx) {
+      const isAuthor = users.some(user => user.id == args.author);
+      if (!isAuthor) {
+        throw new Error("No User Found");
+      }
+      const post = {
+        id: uuidv4(),
+        ...args
+      };
+      posts.push(post);
+      return post;
+    },
+    createComment(parent, args, ctx, info) {
+      const PostFound = posts.some(post => post.id == args.post);
+      const isAuthor = users.some(user => user.id == args.author);
+      if (!PostFound || !isAuthor) {
+        throw new Error("Invalid Post or Author");
+      }
+      const comment = {
+        id: uuidv4(),
+        ...args
+      };
+      comments.push(comment);
+      return comment;
     }
   },
   Post: {

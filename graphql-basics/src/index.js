@@ -23,7 +23,7 @@ import uuidv4 from "uuid/v4";
 // `;
 
 //DEMO POSTS
-const posts = [
+let posts = [
   {
     id: "123",
     title: "GAG",
@@ -43,7 +43,7 @@ const posts = [
     author: "2"
   }
 ];
-const users = [
+let users = [
   {
     id: "1",
     name: "Siddhant",
@@ -57,7 +57,7 @@ const users = [
     age: 11
   }
 ];
-const comments = [
+let comments = [
   {
     id: "1",
     text: "Hey i am Siddhant , this is a test comment",
@@ -95,6 +95,9 @@ type Mutation{
     createUser(data:CreateUserInput!):User! 
     createPost(data:CreatePostInput!):Post!
     createComment(data:CreateCommentInput!):Comment!
+    deleteUser(id:ID!):User!
+    deletePost(id:ID!):Post!
+    deleteComment(id:ID!):Comment!
 }
 
 input CreateUserInput{
@@ -207,6 +210,27 @@ const resolvers = {
       users.push(user);
       return user;
     },
+    deleteUser(parent, args, info, ctx) {
+      const userIndex = users.findIndex(user => user.id == args.id);
+      if (userIndex === -1) {
+        throw new Error("User Not found");
+      }
+      const removedUser = users.splice(userIndex, 1);
+
+      // Remove Posts and commments on that post
+      posts = posts.filter(post => {
+        //check if the post was created by the user we deleted
+        const match = post.author === args.id;
+        if (match) {
+          comments = comments.filter(comment => comment.post !== post.id);
+        }
+        return !match;
+      });
+      comments = comments.filter(comment => comment.author !== args.id);
+      return removedUser[0];
+
+      //Remove comments
+    },
     createPost(parent, args, info, ctx) {
       const isAuthor = users.some(user => user.id == args.data.author);
       if (!isAuthor) {
@@ -218,6 +242,25 @@ const resolvers = {
       };
       posts.push(post);
       return post;
+    },
+    deletePost(parent, args, ctx, info) {
+      const postIndex = posts.findIndex(post => post.id === args.id);
+      if (postIndex === -1) {
+        throw new Error("Invalid Post ID");
+      }
+      deletedPost = posts.splice(postIndex, 1);
+      comments = comments.filter(comment => comment.post !== args.id);
+      return this.deletePost[0];
+    },
+    deleteComment(parent, args, ctx, info) {
+      const commentIndex = comments.findIndex(
+        comment => Comment.id === args.id
+      );
+      if (commentIndex === -1) {
+        throw new Error("Invalid Comment ID");
+      }
+      deltedComment = comments.splice(commentIndex, 1);
+      return deltedComment[0]; 
     },
     createComment(parent, args, ctx, info) {
       const PostFound = posts.some(post => post.id == args.data.post);

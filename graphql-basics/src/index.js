@@ -92,10 +92,27 @@ type Query{
 }
 
 type Mutation{
-    createUser(name:String!,email:String!,age:Int):User! 
-    createPost(title:String!,body:String!,author:ID!):Post!
-    createComment(text:String!,author:ID!,post:ID!):Comment!
+    createUser(data:CreateUserInput!):User! 
+    createPost(data:CreatePostInput!):Post!
+    createComment(data:CreateCommentInput!):Comment!
 }
+
+input CreateUserInput{
+    name:String!
+    email:String!
+    age:Int
+}
+input CreatePostInput{
+    title:String!
+    body:String
+    author:ID!
+}
+input CreateCommentInput{
+    text:String!
+    author:ID!
+    post:ID!
+}
+
 type User {
   id:ID!,
   name:String!
@@ -179,38 +196,38 @@ const resolvers = {
   },
   Mutation: {
     createUser(parent, args, info, ctx) {
-      const emailTaken = users.some(user => user.email == args.email);
+      const emailTaken = users.some(user => user.email == args.data.email);
       if (emailTaken) {
         throw new Error("Email Taken");
       }
       const user = {
         id: uuidv4(),
-        ...args
+        ...args.data
       };
       users.push(user);
       return user;
     },
     createPost(parent, args, info, ctx) {
-      const isAuthor = users.some(user => user.id == args.author);
+      const isAuthor = users.some(user => user.id == args.data.author);
       if (!isAuthor) {
         throw new Error("No User Found");
       }
       const post = {
         id: uuidv4(),
-        ...args
+        ...args.data
       };
       posts.push(post);
       return post;
     },
     createComment(parent, args, ctx, info) {
-      const PostFound = posts.some(post => post.id == args.post);
-      const isAuthor = users.some(user => user.id == args.author);
+      const PostFound = posts.some(post => post.id == args.data.post);
+      const isAuthor = users.some(user => user.id == args.data.author);
       if (!PostFound || !isAuthor) {
         throw new Error("Invalid Post or Author");
       }
       const comment = {
         id: uuidv4(),
-        ...args
+        ...args.data
       };
       comments.push(comment);
       return comment;

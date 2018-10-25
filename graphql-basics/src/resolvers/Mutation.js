@@ -118,7 +118,7 @@ const Mutation = {
       throw new Error("No Commnet Found");
     }
     if (typeof data.text === "String") {
-      comment.title = commnet.text;
+      comment.text = commnet.text;
     }
 
     return commnet;

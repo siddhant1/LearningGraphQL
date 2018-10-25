@@ -33,6 +33,26 @@ const Mutation = {
 
     //Remove comments
   },
+  updateUser(parent, args, { db }, info) {
+    const user = db.users.find(user => user.id === args.id);
+    if (!user) {
+      throw new Error("User Not Found");
+    }
+    if (typeof args.data.email === "string") {
+      const emailTaken = db.users.find(user => user.email == args.data.email);
+      if (emailTaken) {
+        throw new Error("Email Already Taken");
+      }
+      user.email = args.data.email;
+    }
+    if (typeof args.data.name === "String") {
+      user.name = args.data.name;
+    }
+    if (typeof args.data.age !== "undefined") {
+      user.age = data.age;
+    }
+    return user;
+  },
   createPost(parent, args, { db }, info) {
     const isAuthor = db.users.some(user => user.id == args.data.author);
     if (!isAuthor) {
@@ -53,6 +73,20 @@ const Mutation = {
     deletedPost = db.posts.splice(postIndex, 1);
     db.comments = db.comments.filter(comment => comment.post !== args.id);
     return this.deletePost[0];
+  },
+  updatePost(parent, args, { db }, info) {
+    const { id, data } = args;
+    const post = db.posts.find(post => post.id === id);
+    if (!post) {
+      throw new Error("No Post Found");
+    }
+    if (typeof data.title === "String") {
+      post.title = data.title;
+    }
+    if (typeof data.body === "String") {
+      post.body = data.body;
+    }
+    return post;
   },
   deleteComment(parent, args, { db }, info) {
     const commentIndex = db.comments.findIndex(
@@ -76,6 +110,18 @@ const Mutation = {
     };
     db.comments.push(comment);
     return comment;
+  },
+  updateComment(parent, args, { db }, info) {
+    const { id, data } = args;
+    const comment = db.comments.find(comment => comment.id === id);
+    if (!comment) {
+      throw new Error("No Commnet Found");
+    }
+    if (typeof data.text === "String") {
+      comment.title = commnet.text;
+    }
+
+    return commnet;
   }
 };
 export default Mutation;

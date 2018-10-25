@@ -98,7 +98,7 @@ const Mutation = {
     deltedComment = db.comments.splice(commentIndex, 1);
     return deltedComment[0];
   },
-  createComment(parent, args, { db }, info) {
+  createComment(parent, args, { db, pubsub }, info) {
     const PostFound = db.posts.some(post => post.id == args.data.post);
     const isAuthor = db.users.some(user => user.id == args.data.author);
     if (!PostFound || !isAuthor) {
@@ -109,6 +109,7 @@ const Mutation = {
       ...args.data
     };
     db.comments.push(comment);
+    pubsub.publish(`comment ${args.data.post}`, { comment });
     return comment;
   },
   updateComment(parent, args, { db }, info) {

@@ -121,7 +121,7 @@ const Mutation = {
       comment.text = comment.text;
     }
 
-    return commnet;
+    return comment;
   }
 };
 export default Mutation;

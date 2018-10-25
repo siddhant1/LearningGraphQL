@@ -19,6 +19,11 @@ const Subscription = {
       }
       return pubsub.asyncIterator(`comment ${post.id}`);
     }
+  },
+  post: {
+    subscribe(parent, args, { pubsub, db }, info) {
+      return pubsub.asyncIterator("post");
+    }
   }
 };
 export default Subscription;

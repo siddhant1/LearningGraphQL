@@ -17,6 +17,7 @@ services:
             port: '5432'
             database: dfkc9s06l2v75
             user: ukixzgigzjhhca
+            ssl: true
             password: 10c5558e68992740a161e1178910cc332102c7c1639915fb1ccec558d64bc641
             migrations: true
             rawAccess: true

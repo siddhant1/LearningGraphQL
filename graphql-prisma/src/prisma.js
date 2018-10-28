@@ -50,3 +50,58 @@ const prisma = new Prisma({
 //     return prisma.query.users(null, "{id name posts { id title published }}");
 //   })
 //   .then(data => console.log(JSON.stringify(data, undefined, 4)));
+
+//Create a new Post
+
+const createPostForUser = async (authorId, data) => {
+  const post = await prisma.mutation.createPost(
+    {
+      data: {
+        ...data,
+        author: {
+          connect: {
+            id: authorId
+          }
+        }
+      }
+    },
+    "{id}"
+  );
+  return await prisma.query.user(
+    {
+      where: {
+        id: authorId
+      }
+    },
+    "{id name posts {id title published} }"
+  );
+};
+
+const updatePostForUser = async (postId, data) => {
+  const post = await prisma.mutation.updatePost(
+    {
+      where: {
+        id: postId
+      },
+      data: { ...data }
+    },
+    "{ author {id} }"
+  );
+  return await prisma.query.user(
+    {
+      where: {
+        id: post.author.id
+      }
+    },
+    "{ id name email posts { id title published}}"
+  );
+};
+
+updatePostForUser("cjnqc7tc5002k0805dot6q3j1", { published: false }).then(
+  user => console.log(JSON.stringify(user, undefined, 4))
+);
+// createPostForUser("cjnqbsrb9001n0805k8wn5tpu", {
+//   title: "Great Books to Readgg",
+//   body: "NICE ONES",
+//   published: true
+// }).then(user => console.log(JSON.stringify(user, undefined, 4)));

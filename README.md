@@ -1,1 +1,1 @@
-# LearningGraphQL
+# GraphQL101

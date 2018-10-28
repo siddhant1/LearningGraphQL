@@ -54,6 +54,10 @@ const prisma = new Prisma({
 //Create a new Post
 
 const createPostForUser = async (authorId, data) => {
+  const UserExists = await prisma.exists.User({ id: authorId });
+  if (!UserExists) {
+    throw new Error("NO user found");
+  }
   const post = await prisma.mutation.createPost(
     {
       data: {
@@ -65,19 +69,16 @@ const createPostForUser = async (authorId, data) => {
         }
       }
     },
-    "{id}"
+    "{author {id name posts {id title published} }}"
   );
-  return await prisma.query.user(
-    {
-      where: {
-        id: authorId
-      }
-    },
-    "{id name posts {id title published} }"
-  );
+  return post.author;
 };
 
 const updatePostForUser = async (postId, data) => {
+  const PostExists = await prisma.exists.Post({ id: postId });
+  if (!PostExists) {
+    throw new Error("Post Not Found");
+  }
   const post = await prisma.mutation.updatePost(
     {
       where: {
@@ -85,23 +86,19 @@ const updatePostForUser = async (postId, data) => {
       },
       data: { ...data }
     },
-    "{ author {id} }"
+    "{ author { id name email posts { id title published}}}"
   );
-  return await prisma.query.user(
-    {
-      where: {
-        id: post.author.id
-      }
-    },
-    "{ id name email posts { id title published}}"
-  );
+  return post.author;
 };
 
-updatePostForUser("cjnqc7tc5002k0805dot6q3j1", { published: false }).then(
-  user => console.log(JSON.stringify(user, undefined, 4))
-);
-// createPostForUser("cjnqbsrb9001n0805k8wn5tpu", {
-//   title: "Great Books to Readgg",
-//   body: "NICE ONES",
-//   published: true
-// }).then(user => console.log(JSON.stringify(user, undefined, 4)));
+createPostForUser("cjnqbsrb9001n0805k8wn5tpu", {
+  title: "Great Books to Readgg",
+  body: "NICE ONES",
+  published: true
+})
+  .then(user => console.log(JSON.stringify(user, undefined, 4)))
+  .catch(e => console.log(e));
+
+updatePostForUser("cjnqc7tc5002k0805dot6q3j1", { published: false })
+  .then(user => console.log(JSON.stringify(user, undefined, 4)))
+  .catch(err => console.log(err));

@@ -72,7 +72,6 @@ input CreateCommentInput {
 type User {
   id: ID!
   name: String!
-  age: Int
   posts: [Post!]!
   comments: [Comment!]!
 }

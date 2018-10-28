@@ -4,7 +4,7 @@ const prisma = new Prisma({
   typeDefs: "src/generated/prisma.graphql",
   endpoint: "http://192.168.99.100:4466"
 });
-
+export default prisma;
 //prima.query
 //prisma.mutation
 //prisma.subscription
@@ -91,14 +91,14 @@ const updatePostForUser = async (postId, data) => {
   return post.author;
 };
 
-createPostForUser("cjnqbsrb9001n0805k8wn5tpu", {
-  title: "Great Books to Readgg",
-  body: "NICE ONES",
-  published: true
-})
-  .then(user => console.log(JSON.stringify(user, undefined, 4)))
-  .catch(e => console.log(e));
+// createPostForUser("cjnqbsrb9001n0805k8wn5tpu", {
+//   title: "Great Books to Readgg",
+//   body: "NICE ONES",
+//   published: true
+// })
+//   .then(user => console.log(JSON.stringify(user, undefined, 4)))
+//   .catch(e => console.log(e));
 
-updatePostForUser("cjnqc7tc5002k0805dot6q3j1", { published: false })
-  .then(user => console.log(JSON.stringify(user, undefined, 4)))
-  .catch(err => console.log(err));
+// updatePostForUser("cjnqc7tc5002k0805dot6q3j1", { published: false })
+//   .then(user => console.log(JSON.stringify(user, undefined, 4)))
+//   .catch(err => console.log(err));

@@ -7,6 +7,14 @@
                     "defaults": "http://192.168.99.100:4466/"
                 }
             }
+        },
+        "prisma-review": {
+            "schemaPath": "src/generated/prisma-review.graphql",
+            "extensions": {
+                "endpoints": {
+                    "defaults": "http://192.168.99.100:4466/review/default"
+                }
+            }
         }
 
     }

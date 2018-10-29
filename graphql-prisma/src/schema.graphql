@@ -1,11 +1,11 @@
 type Query {
-  post(query: String): [Post!]!
-  user: [User!]!
+  posts(query: String): [Post!]!
+  users(query: String): [User!]!
   greeting(name: String): String!
   add(a: Float!, b: Float!): Float!
   add1(arr: [Float!]!): Float!
   grades: [Int!]!
-  comment: [Comment!]!
+  comments: [Comment!]!
 }
 
 type Mutation {
@@ -43,6 +43,7 @@ type CommentSubscriptionPayload {
 input updatePostInput {
   title: String
   body: String
+  published:Boolean
 }
 input updateCommentInput {
   text: String
@@ -51,16 +52,15 @@ input updateCommentInput {
 input CreateUserInput {
   name: String!
   email: String!
-  age: Int
 }
 input updateUserInput {
   name: String
   email: String
-  age: Int
 }
 input CreatePostInput {
   title: String!
   body: String
+  published:Boolean!
   author: ID!
 }
 input CreateCommentInput {
@@ -72,6 +72,7 @@ input CreateCommentInput {
 type User {
   id: ID!
   name: String!
+  email: String!
   posts: [Post!]!
   comments: [Comment!]!
 }
@@ -80,6 +81,7 @@ type Post {
   title: String
   body: String!
   author: User!
+  published: Boolean!
   comments: [Comment!]!
 }
 type Comment {

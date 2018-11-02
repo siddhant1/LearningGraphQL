@@ -33,17 +33,17 @@ enum MutationType {
 }
 type PostSubscriptionPayload {
   mutation: MutationType!
-  data: Post!
+  node: Post
 }
 type CommentSubscriptionPayload {
   mutation: MutationType!
-  data: Comment!
+  node: Comment
 }
 
 input updatePostInput {
   title: String
   body: String
-  published:Boolean
+  published: Boolean
 }
 input updateCommentInput {
   text: String
@@ -60,7 +60,7 @@ input updateUserInput {
 input CreatePostInput {
   title: String!
   body: String
-  published:Boolean!
+  published: Boolean!
   author: ID!
 }
 input CreateCommentInput {

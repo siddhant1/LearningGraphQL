@@ -18,6 +18,7 @@ type Mutation {
   updateUser(id: ID!, data: updateUserInput): User!
   updatePost(id: ID!, data: updatePostInput): Post!
   updateComment(id: ID!, data: updateCommentInput): Comment!
+  login(data: AuthInput): AuthPayload!
 }
 type AuthPayload {
   user: User!
@@ -47,6 +48,10 @@ input updatePostInput {
   title: String
   body: String
   published: Boolean
+}
+input AuthInput {
+  email: String!
+  password: String!
 }
 input updateCommentInput {
   text: String

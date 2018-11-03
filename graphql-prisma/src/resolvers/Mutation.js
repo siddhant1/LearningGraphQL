@@ -16,6 +16,32 @@ const Mutation = {
       token: jwt.sign({ userId: user.id }, "thisissupersecrettoo")
     };
   },
+
+  async login(
+    parent,
+    {
+      data: { email, password }
+    },
+    { prisma },
+    info
+  ) {
+    const user = await prisma.query.user({
+      where: {
+        email
+      }
+    });
+    if (!user) {
+      throw new Error("Unable to login");
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw new Error("Unable to Login");
+    }
+    return {
+      user,
+      token: jwt.sign({ userId: user.id }, "thisissupersecrettoo")
+    };
+  },
   async deleteUser(parent, args, { prisma }, info) {
     const userExists = await prisma.exists.User({ id: args.id });
     if (!userExists) {

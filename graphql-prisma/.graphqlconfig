@@ -3,8 +3,9 @@
         "prisma": {
             "schemaPath": "src/generated/prisma.graphql",
             "extensions": {
+                "prisma":"prisma/prisma.yml",
                 "endpoints": {
-                    "defaults": "http://192.168.99.100:4466/"
+                    "default": "http://192.168.99.100:4466/"
                 }
             }
         },
@@ -12,7 +13,7 @@
             "schemaPath": "src/generated/prisma-review.graphql",
             "extensions": {
                 "endpoints": {
-                    "defaults": "http://192.168.99.100:4466/review/default"
+                    "default": "http://192.168.99.100:4466/review/default"
                 }
             }
         }

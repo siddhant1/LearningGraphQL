@@ -9,7 +9,7 @@ type Query {
 }
 
 type Mutation {
-  createUser(data: CreateUserInput!): User!
+  createUser(data: CreateUserInput!): AuthPayload!
   createPost(data: CreatePostInput!): Post!
   createComment(data: CreateCommentInput!): Comment!
   deleteUser(id: ID!): User!
@@ -19,7 +19,10 @@ type Mutation {
   updatePost(id: ID!, data: updatePostInput): Post!
   updateComment(id: ID!, data: updateCommentInput): Comment!
 }
-
+type AuthPayload {
+  user: User!
+  token: String!
+}
 type Subscription {
   count: Int!
   comment(postId: ID!): CommentSubscriptionPayload!
@@ -52,6 +55,7 @@ input updateCommentInput {
 input CreateUserInput {
   name: String!
   email: String!
+  password: String
 }
 input updateUserInput {
   name: String
@@ -73,6 +77,7 @@ type User {
   id: ID!
   name: String!
   email: String!
+  password: String!
   posts: [Post!]!
   comments: [Comment!]!
 }

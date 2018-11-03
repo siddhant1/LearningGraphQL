@@ -21,10 +21,13 @@ const server = new GraphQLServer({
     Post,
     Comment
   },
-  context: {
-    db,
-    pubsub,
-    prisma
+  context(request) {
+    return {
+      db,
+      pubsub,
+      prisma,
+      request
+    };
   }
 });
 server.start(({ port }) => console.log("Server is running on port " + port));

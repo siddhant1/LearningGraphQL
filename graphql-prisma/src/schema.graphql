@@ -6,6 +6,9 @@ type Query {
   add1(arr: [Float!]!): Float!
   grades: [Int!]!
   comments: [Comment!]!
+  post(id: ID!): Post!
+  me(id: ID!): User!
+  myPosts(query: String): [Post!]!
 }
 
 type Mutation {

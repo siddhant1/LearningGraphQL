@@ -153,7 +153,7 @@ const Mutation = {
       }
     });
     if (!commentExists) {
-      throw new Error("Unable to update Comment");
+       throw new Error("Unable to update Comment");
     }
     return prisma.mutation.updateComment(
       {

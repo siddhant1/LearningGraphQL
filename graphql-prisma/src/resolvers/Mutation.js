@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import getUserId from "../utils/getUserId";
+import { generateToken } from "../utils/generateToken";
 const Mutation = {
   async createUser(parent, args, { prisma }, info) {
     if (args.data.password.length < 8) {
@@ -14,7 +15,7 @@ const Mutation = {
     console.log(user);
     return {
       user,
-      token: jwt.sign({ userId: user.id }, "thisissupersecrettoo")
+      token: generateToken(user.id)
     };
   },
 
@@ -40,7 +41,7 @@ const Mutation = {
     }
     return {
       user,
-      token: jwt.sign({ userId: user.id }, "thisissupersecrettoo")
+      token: generateToken(user.id)
     };
   },
   async deleteUser(parent, args, { prisma, request }, info) {
@@ -91,8 +92,21 @@ const Mutation = {
         id: userId
       }
     });
+    const isPublished = await prisma.exists.Post({
+      id,
+      published: true
+    });
     if (!postExists) {
       throw new Error("Not Able to Update Post");
+    }
+    if (isPublished && data.published === false) {
+      await prisma.mutation.deleteManyComments({
+        where: {
+          post: {
+            id
+          }
+        }
+      });
     }
     return prisma.mutation.updatePost({
       data: {
@@ -123,8 +137,15 @@ const Mutation = {
       info
     );
   },
-  createComment(parent, args, { prisma, request }, info) {
+  async createComment(parent, args, { prisma, request }, info) {
     const userId = getUserId(request);
+    const postExists = await prisma.exists.Post({
+      published: true,
+      id: args.data.post
+    });
+    if (!postExists) {
+      throw new Error("Unable to add a comment");
+    }
     return prisma.mutation.createComment(
       {
         data: {
@@ -153,7 +174,7 @@ const Mutation = {
       }
     });
     if (!commentExists) {
-       throw new Error("Unable to update Comment");
+      throw new Error("Unable to update Comment");
     }
     return prisma.mutation.updateComment(
       {

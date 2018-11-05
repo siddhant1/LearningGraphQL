@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.js --ext js,graphql --exec babel-node",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --watch",
     "get-schema": "graphql get-schema -p prisma"
   },
   "author": "",
@@ -20,5 +20,8 @@
     "graphql-yoga": "^1.16.7",
     "jsonwebtoken": "^8.3.0",
     "prisma-binding": "^2.1.6"
+  },
+  "devDependencies": {
+    "jest": "^23.5.0"
   }
 }
